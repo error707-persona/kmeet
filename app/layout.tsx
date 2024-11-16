@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster"
-
+import '@stream-io/video-react-sdk/dist/css/styles.css';
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -44,6 +44,7 @@ export default function RootLayout({
           className={`${geistSans.variable} bg-dark-2 ${geistMono.variable} antialiase`}
         >
           {children}
+          <Toaster />
         </body>
       </ClerkProvider>
     </html>
