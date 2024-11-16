@@ -1,12 +1,65 @@
-"use client";
+'use client';
 import React, { useState } from 'react'
 import Image from 'next/image';
 import HomeCards from './HomeCards';
-import { Router, useRouter } from 'next/router';
+import { Router } from 'next/router';
 import Link from 'next/link';
+import MeetingModal from './MeetingModal';
+import { useUser } from '@clerk/nextjs';
+import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { useRouter } from 'next/navigation';
+import { StreamClient } from '@stream-io/node-sdk';
+// or
+// const { StreamClient } = require("@stream-io/node-sdk");
+
 
 const MeetingTypeList = () => {
-    // const router = useRouter()
+    const { user } = useUser();
+    const router = useRouter();
+    // const client = useStreamVideoClient();
+    const [callDetails, setcallDetails] = useState<Call>()
+    const client = useStreamVideoClient();
+
+
+    const [values, setvalues] = useState({
+        dateTime: new Date(),
+        description: '',
+        link: ''
+    });
+    const createMeeting = async () => {
+
+        console.log('Inside create Meeting');
+        if (!client || !user) return;
+
+        try {
+            const id = crypto.randomUUID();
+            const call = client.call('default', id);
+
+            if (!call) throw new Error('Failed to create call');
+
+            const startsAt = values.dateTime.toISOString() || new Date(Date.now()).toISOString();
+            const description = values.description || 'Instant meeting';
+
+            await call.getOrCreate({
+                data: {
+                    starts_at: startsAt,
+                    custom: {
+                        description
+                    }
+                }
+            })
+
+            setcallDetails(call);
+            if (!values.description) {
+                router.push(`/meeting/${call.id}`);
+            }
+            console.log("meeting created")
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+    }
     const [meetingState, setmeetingState] = useState<'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined>();
     return (
         <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4'>
@@ -14,7 +67,7 @@ const MeetingTypeList = () => {
                 img="/icons/add-meeting.svg"
                 title="New Meeting"
                 description="Start an instant meeting"
-                handleClick={() => setmeetingState('isJoiningMeeting')}
+                handleClick={() => setmeetingState('isInstantMeeting')}
                 className="bg-blue-1" />
             <HomeCards
                 img="/icons/schedule.svg"
@@ -34,7 +87,14 @@ const MeetingTypeList = () => {
                 description="Via invitation link"
                 handleClick={() => setmeetingState('isJoiningMeeting')}
                 className="bg-orange-1" />
-
+            <MeetingModal
+                isOpen={meetingState === 'isInstantMeeting'}
+                onClose={() => setmeetingState(undefined)}
+                title="Start a New Meeting?"
+                className="text-center"
+                buttonText="Start Meeting"
+                handleClick={createMeeting}
+            />
         </section>
     )
 }

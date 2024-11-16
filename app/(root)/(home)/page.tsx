@@ -5,12 +5,12 @@ const Home = () => {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const currentTime = new Date();
-    var hours = String(currentTime.getHours()).padStart(2, "0");
-    var minutes = String(currentTime.getMinutes()).padStart(2, "0");
-    var date = currentTime.getDate();
-    var day = days[currentTime.getDay()];
-    var month = months[currentTime.getMonth()];
-    var year = currentTime.getFullYear();
+    const hours = String(currentTime.getHours()).padStart(2, "0");
+    const minutes = String(currentTime.getMinutes()).padStart(2, "0");
+    const date = currentTime.getDate();
+    const day = days[currentTime.getDay()];
+    const month = months[currentTime.getMonth()];
+    const year = currentTime.getFullYear();
 
   return (
     <section className='flex size-full flex-col gap-10 text-white'>
