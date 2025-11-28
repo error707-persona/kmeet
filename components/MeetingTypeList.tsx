@@ -77,6 +77,7 @@ const MeetingTypeList = () => {
 
     }
     const [meetingState, setmeetingState] = useState<'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined>();
+    const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetails?.id}`
     return (
         <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4'>
             <HomeCards
@@ -124,30 +125,26 @@ const MeetingTypeList = () => {
                         <label className='text-base text-normal leading-[22px] text-sky-2'>
                             Select Date and Time
                         </label>
-                        <Textarea className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-                            onChange={(e) => {
-                                setvalues({ ...values, description: e.target.value })
-                            }} />
                         <DatePicker selected={values.dateTime}
-                        onChange={(date)=>setvalues({...values,dateTime:date!})}
-                        showTimeSelect
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        timeCaption="time"
-                        dateFormat="MMMM d, yyyy h:mm aa"
-                        className='w-full rounded bg-dark-3 p-2 focus:outline-none' />
+                            onChange={(date) => setvalues({ ...values, dateTime: date! })}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            timeCaption="time"
+                            dateFormat="MMMM d, yyyy h:mm aa"
+                            className='w-full rounded bg-dark-3 p-2 focus:outline-none' />
                     </div>
                 </MeetingModal> : <MeetingModal
-                    isOpen={meetingState === 'isInstantMeeting'}
+                    isOpen={meetingState === 'isScheduleMeeting'}
                     onClose={() => setmeetingState(undefined)}
                     title="Meeting Created"
-                    className="text-center"
                     handleClick={() => {
-                        // navigator.clipboard.writeText(meetingLink)
-                        toast({ title: 'Link copied' })
+                        navigator.clipboard.writeText(meetingLink);
+                        toast({ title: 'Link Copied' });
                     }}
-                    image="/iconschecked.svg"
+                    image={'/icons/checked.svg'}
                     buttonIcon="/icons/copy.svg"
+                    className="flex border-2 text-center justify-center items-center"
                     buttonText="Copy Meeting Link"
                 />}
             <MeetingModal

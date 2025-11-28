@@ -21,7 +21,7 @@ const Sidebar = () => {
                             key={link.label} 
                             className={cn('flex gap-4 items-center p-2 rounded justify-start', { 'bg-blue-1': isActive })}>
                                <Image
-                               src={link.img}
+                               src={link.imgURL}
                                alt={link.label}
                                width={16}
                                height={16}
