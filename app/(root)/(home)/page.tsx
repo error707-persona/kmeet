@@ -13,8 +13,8 @@ const Home = () => {
     const year = currentTime.getFullYear();
 
   return (
-    <section className='flex size-full flex-col gap-10 text-white'>
-        <div className='h-[210px] w-full rounded bg-hero bg-cover'>
+    <section className='flex h-[calc(100vh-5rem)] size-full flex-col gap-10 text-white'>
+        <div className='h-1/2 w-full rounded bg-hero bg-cover'>
             <div className='flex h-full w-fit flex-col justify-between max-md:px-2 max-md:py-5 lg:p-11'>
                 <h2 className='glassmorphism w-max rounded py-2 px-2 text-xs font-normal'>Upcoming meet at: 12:30 PM</h2>
                 <div className='flex flex-col gap-2'>
@@ -25,7 +25,7 @@ const Home = () => {
                 </div>
             </div>
         </div>
-<MeetingTypeList/>
+        <MeetingTypeList/>
     </section>
   )
 }
