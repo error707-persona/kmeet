@@ -29,13 +29,16 @@ const MeetingModal = ({ isOpen, onClose, title, className, children, handleClick
             <DialogContent className='flex w-full max-w-[520px] flex-col gap-6 border-none bg-dark-1 px-6 py-9 text-white'>
                 {/* <DialogTitle></DialogTitle>
                  <DialogDescription></DialogDescription> */}
-                <div className='flex flex-col gap=6'>
-                    {image && (
+                <div className='flex flex-col gap-6'>
+                    <div className='flex items-center gap-5 justify-center'>
+                        {image && (
                         <div>
                             <Image src={image} alt="image" width={72} height={72}/>
                         </div>
                     )}
-                    <h1 className='font-bold text-2xl leading-[42px] text-center'>{title}</h1>
+                    <div className='font-bold text-2xl leading-[42px] text-center'>{title}</div>
+                    </div>
+                    
                     {children}
                     <Button className='bg-blue-1 rounded hover:bg-blue-900 mt-4' onClick={handleClick}>
                         {buttonIcon && (

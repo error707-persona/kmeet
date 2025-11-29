@@ -212,7 +212,7 @@ const MeetingTypeList = () => {
         <MeetingModal
           isOpen={meetingState === 'isScheduleMeeting'}
           onClose={() => setMeetingState(undefined)}
-          title="Meeting Created Meeting"
+          title="Meeting Created"
           className="text-center"
           buttonText="Copy Meeting Link"
           handleClick={() => {
