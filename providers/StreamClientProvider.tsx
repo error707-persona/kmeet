@@ -8,10 +8,10 @@ import {
     StreamVideoClient,
     User,
   } from '@stream-io/video-react-sdk';
-import Error from 'next/error';
+// import Error from 'next/error';
 import { ReactNode, useEffect, useState } from 'react';
   
-  const apiKey = 'tybnyz8rqh6b';
+  const apiKey = 'cpfu8cwcyuqv';
   const userId = 'user-id';
   const token = 'authentication-token';
   const user: User = { id: userId };

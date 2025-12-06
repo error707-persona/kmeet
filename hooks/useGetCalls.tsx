@@ -1,51 +1,57 @@
 import { useUser } from "@clerk/nextjs";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useEffect, useState } from "react"
-
+  
 export const useGetCalls = () => {
-    const [calls, setcalls] = useState<Call[]>([]);
-    const client = useStreamVideoClient();
-    const [isLoading, setisLoading] = useState(false);
-    const { user } = useUser();
+  const [calls, setCalls] = useState<Call[]>([]);
+  const client = useStreamVideoClient();
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUser();
 
-    useEffect(() => {
-        const loadCalls = async () => {
-            if (!client || !user?.id) return;
-            setisLoading(true);
-            try {
-                const { calls } = await client.queryCalls({
-                    sort: [{ field: 'starts_at', direction: -1 }],
-                    filter_conditions: {
-                        starts_at: { $exists: true },
-                        $or: [
-                            { created_by_user_id: user.id },
-                            { members: { $in: [user.id] } },
-                        ]
-                    }
-                });
-                setcalls(calls);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setisLoading(false);
-            }
-        }
-        loadCalls();
-    }, [client, user?.id])
+  useEffect(() => {
+    const loadCalls = async () => {
+      if (!client || !user?.id) return;
+      setIsLoading(true);
 
-    const now = new Date();
-    const endedCalls = calls.filter(({ state: { startsAt, endedAt } }: Call) => {
-        return (startsAt && new Date(startsAt) < now || !!endedAt)
-    });
-    const upcomingCalls = calls.filter(({ state: { startsAt } }: Call) => {
-        return startsAt && new Date(startsAt) > now
-    });
+      try {
+        const { calls } = await client.queryCalls({
+          sort: [{ field: "state.starts_at", direction: 1 }],
+          filter_conditions: {
+            $or: [
+              { created_by_user_id: user.id },
+              { members: { $in: [user.id] } },
+            ],
+          },
+        });
 
+        console.log("Fetched calls:", calls);
+        setCalls(calls);
+      } catch (error) {
+        console.error("Query error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return {
-        endedCalls,
-        upcomingCalls,
-        callRecordings: calls,
-        isLoading
-    }
-}
+    loadCalls();
+  }, [client, user?.id]);
+
+  const now = new Date();
+
+  const endedCalls = calls.filter((call) => {
+    const { starts_at, ended_at } = call.state;
+    return (starts_at && new Date(starts_at) < now) || !!ended_at;
+  });
+
+  const upcomingCalls = calls.filter((call) => {
+    const { starts_at } = call.state;
+    return starts_at && new Date(starts_at) > now;
+  });
+
+  return {
+    endedCalls,
+    upcomingCalls,
+    callRecordings: calls,
+    isLoading,
+  };
+};
