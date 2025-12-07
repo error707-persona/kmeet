@@ -52,6 +52,7 @@ const MeetingTypeList = () => {
           },
         },
       });
+
       console.log("upcoming calls created: ", calls)
       setCallDetail(call);
       if (!values.description) {

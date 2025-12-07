@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
   
 export const useGetCalls = () => {
   const [calls, setCalls] = useState<Call[]>([]);
@@ -15,16 +15,15 @@ export const useGetCalls = () => {
 
       try {
         const { calls } = await client.queryCalls({
-          sort: [{ field: "state.starts_at", direction: 1 }],
-          filter_conditions: {
-            $or: [
-              { created_by_user_id: user.id },
-              { members: { $in: [user.id] } },
-            ],
-          },
+          sort: [{ field: "starts_at", direction: 1 }], // ✅ must stay snake_case
+          // filter_conditions: {
+          //   $or: [
+          //     { created_by_user_id: user.id },
+          //     { members: { $in: [user.id] } },
+          //   ],
+          // },
         });
 
-        console.log("Fetched calls:", calls);
         setCalls(calls);
       } catch (error) {
         console.error("Query error:", error);
@@ -38,14 +37,15 @@ export const useGetCalls = () => {
 
   const now = new Date();
 
+  // ✅ camelCase on client
   const endedCalls = calls.filter((call) => {
-    const { starts_at, ended_at } = call.state;
-    return (starts_at && new Date(starts_at) < now) || !!ended_at;
+    const { startsAt, endedAt } = call.state;
+    return (startsAt && new Date(startsAt) < now) || !!endedAt;
   });
 
   const upcomingCalls = calls.filter((call) => {
-    const { starts_at } = call.state;
-    return starts_at && new Date(starts_at) > now;
+    const { startsAt } = call.state;
+    return startsAt && new Date(startsAt) > now;
   });
 
   return {
